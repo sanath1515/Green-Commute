@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Avatar test should match the snapshot 1`] = `
+<div
+  class="MuiAvatar-root MuiAvatar-circular"
+>
+  <img
+    class="MuiAvatar-img"
+    src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823__340.jpg"
+  />
+</div>
+`;

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Aqi Testing Matches the snapshot 1`] = `
+<div>
+  <div
+    class="makeStyles-root-8"
+  >
+    <img
+      class="makeStyles-image-9"
+      src="https://cdn.zeplin.io/5fa28fcbff79c58958e4e1a6/assets/ae5e266d-f03e-4732-af5b-a8ebdac94494.svg"
+    />
+    <h3
+      class="MuiTypography-root makeStyles-text-10 MuiTypography-h3"
+    >
+      Enter location to know Time Air Quality Index (Aqi)
+    </h3>
+  </div>
+</div>
+`;

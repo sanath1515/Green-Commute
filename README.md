@@ -2,8 +2,6 @@
 
 ## Introduction
 
-## Introduction
-
 Green Commute is a cutting-edge platform that revolutionizes the traditional job search experience, combining the functionality of renowned job suggestion websites like LinkedIn, Naukri, and Indeed with a unique eco-conscious twist. This innovative project stands out by offering an additional feature - the provision of 'Green Commute Routes'. These routes are carefully selected based on lower Air Quality Index (AQI) levels, ensuring a healthier and more environmentally friendly journey to work.
 
 The application not only suggests suitable jobs based on the user's skills, experience, and location but also emphasizes the importance of a safe and sustainable commute. It intelligently recommends various transportation mediums that align with the goal of reducing carbon footprints, such as cycling, walking, public transportation, or electric vehicles. 

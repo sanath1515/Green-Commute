@@ -34,6 +34,7 @@ Overall, Green Commute serves as a beacon for sustainable employment, encouragin
 - My SQL Work Bench
 - Intellij (backend)
 - Story Book
+- Draw.io/sql.dbm
 
 ## Getting Started
 
@@ -56,12 +57,18 @@ Overall, Green Commute serves as a beacon for sustainable employment, encouragin
         ```
 
 ## Screenshots 
-![register](/assets/images/register.png)
-![login](/assets/images/login.png)
-![initialScreen](/assets/images/noUserSelected.png)
-![coversation](/assets/images/conversation.png)
-![conversationEnd](/assets/images/conversationEnd.png)
-![conv0](/assets/images/conversation1.png)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/a3637745-340d-43ee-b621-b9631d9f4a88)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/9588fef0-efcd-4c1b-9d8c-6afc1f106747)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/a1aec4ea-84d0-48fd-922f-a664dc8c6340)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/0617643a-fa5a-4217-9fe9-b1e35cbc1b59)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/d1535225-1326-45f7-a548-559284611f7a)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/4ac5c97e-0bd3-4b53-b61a-fdb4d5f0fef7)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/ff202caf-5a16-467a-9594-f67ed755514d)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/852eee26-bee3-4868-b9d9-a3bf5a8667f5)
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/fca260c1-a4e1-49c6-a2af-3d3f147a8512)
+
+## Database Design 
+![image](https://github.com/sanath1515/Green-Commute/assets/60379301/7e9e9b8b-3be8-4350-8456-b9fe4aa2431c)
 
 ## Database
 

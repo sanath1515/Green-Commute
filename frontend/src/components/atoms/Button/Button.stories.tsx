@@ -11,7 +11,7 @@ const Template = (args) => <Button {...args} />;
 export const Primary = Template.bind({});
 
 Primary.args = {
-  name: "hello",
+  name: "Save",
   variant: "outlined",
   color: "primary",
 };

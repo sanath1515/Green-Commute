@@ -5,18 +5,25 @@ import JobLocation from "../JobLocation/JobLocation";
 import JobSkills from "../JobSkills/JobSkills";
 import WorkLocation from "../WorkLocation/WorkLocation";
 
-function LandingPage() {
-  const stepId = useSelector<greenState, greenState["step"]>((state) => {
-    return state.step;
-  });
-
-  return (
-    <React.Fragment>
-      {stepId === "1" && <JobLocation status={1} />}
-      {stepId === "2" && <WorkLocation status={2} />}
-      {stepId === "3" && <JobSkills status={3} />}
-    </React.Fragment>
+const LandingPage: React.FC = () => {
+  const stepId = useSelector<greenState, greenState["step"]>(
+    (state) => state.step
   );
-}
+
+  const renderStep = () => {
+    switch (stepId) {
+      case "1":
+        return <JobLocation status={1} />;
+      case "2":
+        return <WorkLocation status={2} />;
+      case "3":
+        return <JobSkills status={3} />;
+      default:
+        return null;
+    }
+  };
+
+  return <>{renderStep()}</>;
+};
 
 export default LandingPage;

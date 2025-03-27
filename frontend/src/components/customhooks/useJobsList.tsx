@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllJobs, getJobsByFilter } from "../../axios/ApiProvider";
+import { getAllJobs, getAllJobsPython, getJobsByFilter } from "../../axios/ApiProvider";
 import { jobDataProp } from "../../Constants";
 
 const useJobsList = () => {
@@ -7,7 +7,7 @@ const useJobsList = () => {
   const [filteredjobs, setFilteredjobs] = React.useState<jobDataProp[]>([]);
 
   useEffect(() => {
-    getAllJobs((res: jobDataProp[]) => {
+    getAllJobsPython((res: jobDataProp[]) => {
       setJobcards(res);
     });
   }, []);

@@ -1,7 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import theme from "../../../theme/theme";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { styled } from "@mui/material/styles"; 
 
 export type CabCardProps = {
   img: string;
@@ -9,53 +8,45 @@ export type CabCardProps = {
   cost: string;
 };
 
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    alignItems: "center",
-  },
-  col: {
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: theme.spacing(2.5),
-    marginRight: theme.spacing(20),
-    textAlign: "left",
-  },
-  name: {
-    textTransform: "none",
-    color: theme.palette.grey[700],
-  },
-  cost: {
-    textTransform: "none",
-    color: theme.palette.grey[200],
-  },
-  booknow: {
-    color: theme.palette.primary.main,
-    float: "right",
-    fontWeight: 600,
-  },
+const Root = styled("div")({
+  display: "flex",
+  alignItems: "center",
 });
 
+const Col = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  marginLeft: theme.spacing(2.5),
+  marginRight: theme.spacing(20),
+  textAlign: "left",
+}));
+
+const NameText = styled(Typography)(({ theme }) => ({
+  textTransform: "none",
+  color: theme.palette.grey[700],
+}));
+
+const CostText = styled(Typography)(({ theme }) => ({
+  textTransform: "none",
+  color: theme.palette.grey[500], // 💡 changed from [200] for better contrast
+}));
+
+const BookNow = styled(Typography)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontWeight: 600,
+  marginLeft: "auto",
+}));
+
 const CabCard: React.FC<CabCardProps> = ({ cost, img, name }) => {
-  const classes = useStyles();
-  const BOOKNOW = "Book now";
   return (
-    <div className={classes.root}>
-      <img src={img}></img>
-      <div className={classes.col}>
-        <Typography children={name} className={classes.name} variant="body1" />
-        <Typography
-          children={`Approx ${cost}`}
-          className={classes.cost}
-          variant="overline"
-        />
-      </div>
-      <Typography
-        children={BOOKNOW}
-        variant="body1"
-        className={classes.booknow}
-      />
-    </div>
+    <Root>
+      <img src={img} alt={name} />
+      <Col>
+        <NameText variant="body1">{name}</NameText>
+        <CostText variant="overline">{`Approx ${cost}`}</CostText>
+      </Col>
+      <BookNow variant="body1">Book now</BookNow>
+    </Root>
   );
 };
 

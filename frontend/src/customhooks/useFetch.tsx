@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getAllJobs } from "../axios/ApiProvider";
+import { getAllJobs, getAllJobsPython } from "../axios/ApiProvider";
 import { jobDataProp } from "../Constants";
 import { greenState } from "../store/reducers";
 

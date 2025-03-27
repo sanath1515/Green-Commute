@@ -1,6 +1,5 @@
-import { Avatar } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import React from "react";
+import { Avatar } from "@mui/material";
+import { styled } from "@mui/material/styles"; 
 
 type AvatarProps = {
   alt?: string;
@@ -9,21 +8,20 @@ type AvatarProps = {
   className?: string;
   valid?: boolean;
 };
-const useStyles = makeStyles({
-  root: {
-    backgroundColor: "grey",
-  },
-});
 
-export const Avatars = (props: AvatarProps) => {
-  const classes = useStyles();
+// Styled Avatar using Emotion
+const StyledAvatar = styled(Avatar)<{ valid?: boolean }>(({ valid }) => ({
+  backgroundColor: valid ? "grey" : "transparent",
+}));
+
+export const Avatars = ({ alt, src, variant, className, valid }: AvatarProps) => {
   return (
-    <Avatar
-      alt={props.alt}
-      src={props.src}
-      variant={props.variant}
-      className={props.className}
-      classes={{ root: props.valid ? classes.root : "" }}
+    <StyledAvatar
+      alt={alt}
+      src={src}
+      variant={variant}
+      className={className}
+      valid={valid}
     />
   );
 };

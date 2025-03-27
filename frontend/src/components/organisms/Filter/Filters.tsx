@@ -1,117 +1,94 @@
 import React from "react";
 import { Button } from "../../atoms/Button/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import CheckboxList from "../../molecules/CheckList/CheckList";
 import RadioButtonsGroup from "../../molecules/RadioList/RadioButtons";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import { COMMUTE_ROUTES, TRANSPORT_ICONS } from "../../../Constants";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
-
 import {
   Dialog,
   DialogActions,
   DialogContent,
   Grid,
   IconButton,
-} from "@material-ui/core";
+  useTheme,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { COMMUTE_ROUTES, TRANSPORT_ICONS } from "../../../Constants";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { greenState } from "../../../store/reducers";
 
-const useStyles = makeStyles({
-  root: {
+// Styled Components
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiPaper-root": {
     width: "1000px",
     height: "800px",
+    padding: theme.spacing(3),
   },
-  button1: {
-    marginRight: 10,
-    textTransform: "none",
-    borderRadius: "6px",
-    border: "solid 1px #e3f3f6",
-    width: "101px",
-    height: "38px",
-  },
-  button: {
-    textTransform: "none",
-    fontSize: "14px",
-    borderRadius: "6px",
-    border: "solid 1px #e3f3f6",
-  },
-  button2: {
-    color: "#FFF",
-    borderRadius: 10,
-    textTransform: "none",
-    width: "101px",
-    height: "38px",
-    marginRight: 40,
-  },
-  icon: {
-    width: "24px",
-    height: "24px",
-    objectFit: "contain",
-    color: "#9bbdcb",
-  },
-  closeIcon: {
-    position: "absolute",
-    right: 8,
-    top: 8,
-  },
-});
+}));
 
-type filterProps = {
+const Icon = styled(FilterAltOutlinedIcon)(({ theme }) => ({
+  width: "24px",
+  height: "24px",
+  color: "#9bbdcb",
+}));
+
+const CloseIcon = styled(CloseOutlinedIcon)(({ theme }) => ({
+  position: "absolute",
+  right: theme.spacing(1),
+  top: theme.spacing(1),
+}));
+
+// Types
+type FilterProps = {
   button: string;
   button1: string;
   button2: string;
 };
 
-const Filters = ({ button, button1, button2 }: filterProps) => {
-  const [open, setOpen] = React.useState(false);
-  const classes = useStyles();
+const Filters: React.FC<FilterProps> = ({ button, button1, button2 }) => {
+  const theme = useTheme();
   const dispatch = useDispatch();
-  const history = useHistory();
-
+  const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
   const [allFilters, setAllFilters] = React.useState<string[]>([]);
-  const ops: any = useSelector<greenState, greenState["options"]>((state) => {
-    return state.options;
-  });
 
-  const opsValue: boolean = useSelector<greenState, greenState["optionValue"]>(
-    (state) => {
-      return state.optionValue;
-    }
+  const ops:any = useSelector<greenState, greenState["options"]>(
+    (state) => state.options
   );
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const opsValue = useSelector<greenState, greenState["optionValue"]>(
+    (state) => state.optionValue
+  );
+
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleChange = (event: any, id: string) => {
-    var filterValue: string = event.target.value;
-
-    var temp: string[] = allFilters;
+    let filterValue = event.target.value;
+    const temp = [...allFilters];
 
     switch (filterValue) {
-      case COMMUTE_ROUTES.transport[1]:
-        filterValue = TRANSPORT_ICONS[3];
-        break;
-      case COMMUTE_ROUTES.transport[3]:
-        filterValue = TRANSPORT_ICONS[2];
-        break;
       case COMMUTE_ROUTES.transport[0]:
         filterValue = TRANSPORT_ICONS[0];
+        break;
+      case COMMUTE_ROUTES.transport[1]:
+        filterValue = TRANSPORT_ICONS[3];
         break;
       case COMMUTE_ROUTES.transport[2]:
         filterValue = TRANSPORT_ICONS[1];
         break;
+      case COMMUTE_ROUTES.transport[3]:
+        filterValue = TRANSPORT_ICONS[2];
+        break;
     }
 
-    if (!(ops[id].indexOf(filterValue) > -1)) ops[id].push(filterValue);
-
-    dispatch({ type: "SET_OPTIONS", payload: ops });
-    dispatch({ type: "SET_OPTIONS_VALUE", payload: !opsValue });
+    if (!ops[id].includes(filterValue)) {
+      ops[id].push(filterValue);
+      dispatch({ type: "SET_OPTIONS", payload: ops });
+      dispatch({ type: "SET_OPTIONS_VALUE", payload: !opsValue });
+    }
 
     if (!temp.includes(filterValue)) {
       setAllFilters(temp);
@@ -129,31 +106,33 @@ const Filters = ({ button, button1, button2 }: filterProps) => {
         transport: [],
       },
     });
-
     dispatch({ type: "SET_OPTIONS_VALUE", payload: !opsValue });
     setAllFilters([]);
   };
 
   const clickHandler = () => {
     setOpen(false);
-    history.push("/advancedsearch");
+    navigate("/advancedsearch");
   };
+
   return (
     <>
       <Button
         variant="outlined"
         onClick={handleClickOpen}
-        startIcon={<FilterAltOutlinedIcon className={classes.icon} />}
+        startIcon={<Icon />}
         name={button}
-        className={classes.button}
+        sx={{
+          textTransform: "none",
+          fontSize: "14px",
+          borderRadius: "6px",
+          border: "1px solid #e3f3f6",
+        }}
       />
 
-      <Dialog className={classes.root} open={open} onClose={handleClose}>
-        <IconButton>
-          <CloseOutlinedIcon
-            onClick={handleClose}
-            className={classes.closeIcon}
-          ></CloseOutlinedIcon>
+      <StyledDialog open={open} onClose={handleClose}>
+        <IconButton onClick={handleClose}>
+          <CloseIcon />
         </IconButton>
 
         <DialogContent>
@@ -163,7 +142,6 @@ const Filters = ({ button, button1, button2 }: filterProps) => {
                 listNames={COMMUTE_ROUTES.distances}
                 heading={COMMUTE_ROUTES.headings[0]}
                 onChange={(event) => handleChange(event, "distance")}
-                // flag={check}
               />
             </Grid>
             <Grid item xs={4}>
@@ -171,7 +149,6 @@ const Filters = ({ button, button1, button2 }: filterProps) => {
                 listNames={COMMUTE_ROUTES.postDates}
                 heading={COMMUTE_ROUTES.headings[1]}
                 onChange={(event) => handleChange(event, "datePosted")}
-                // flag={check}
               />
             </Grid>
             <Grid item xs={4}>
@@ -182,7 +159,6 @@ const Filters = ({ button, button1, button2 }: filterProps) => {
                 listNames={COMMUTE_ROUTES.jobTypes}
                 heading={COMMUTE_ROUTES.headings[2]}
                 onChange={(event) => handleChange(event, "jobType")}
-                // flag={check}
               />
             </Grid>
             <Grid item xs={4}>
@@ -190,7 +166,6 @@ const Filters = ({ button, button1, button2 }: filterProps) => {
                 listNames={COMMUTE_ROUTES.experience}
                 heading={COMMUTE_ROUTES.headings[3]}
                 onChange={(event) => handleChange(event, "experienceLevel")}
-                // flag={check}
               />
             </Grid>
             <Grid item xs={4}>
@@ -198,28 +173,42 @@ const Filters = ({ button, button1, button2 }: filterProps) => {
                 listNames={COMMUTE_ROUTES.transport}
                 heading={COMMUTE_ROUTES.headings[4]}
                 onChange={(event) => handleChange(event, "transport")}
-                // flag={check}
               />
             </Grid>
           </Grid>
         </DialogContent>
+
         <DialogActions>
           <Button
             variant="outlined"
             color="primary"
-            className={classes.button1}
             name={button1}
-            onClick={() => handleClearAll()}
+            onClick={handleClearAll}
+            sx={{
+              marginRight: 2,
+              textTransform: "none",
+              borderRadius: "6px",
+              width: "101px",
+              height: "38px",
+              border: "1px solid #e3f3f6",
+            }}
           />
           <Button
             variant="contained"
             color="primary"
-            className={classes.button2}
             name={button2}
-            onClick={() => clickHandler()}
+            onClick={clickHandler}
+            sx={{
+              color: "#FFF",
+              borderRadius: 2,
+              width: "101px",
+              height: "38px",
+              marginRight: "40px",
+              textTransform: "none",
+            }}
           />
         </DialogActions>
-      </Dialog>
+      </StyledDialog>
     </>
   );
 };

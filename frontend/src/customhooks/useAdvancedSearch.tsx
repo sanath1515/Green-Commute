@@ -9,7 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { greenState } from "../store/reducers";
 import useFilterSearch from "./useFilterSearch";
-import { getJobByJobId, getJobsByFilter } from "../axios/ApiProvider";
+import { getAllJobsPython, getJobByJobId, getJobByJobIdPython, getJobsByFilter } from "../axios/ApiProvider";
 import useJobDescription from "../components/customhooks/useJobDescription";
 
 const useAdvancedFilterSearch = (initialValue: jobDataProp[]) => {
@@ -33,6 +33,12 @@ const useAdvancedFilterSearch = (initialValue: jobDataProp[]) => {
   const options: optionsType = useSelector<greenState, greenState["options"]>(
     (state) => {
       return state.options;
+    }
+  );
+
+  const resume_name = useSelector<greenState, greenState["resumeName"]>(
+    (state) => {
+      return state.resumeName;
     }
   );
 
@@ -84,11 +90,20 @@ const useAdvancedFilterSearch = (initialValue: jobDataProp[]) => {
   };
 
   useEffect(() => {
-    getJobsByFilter(options, skill, location, (res: any) => {
-      setAdvancedFilteredjobs(res);
-    });
+    // getJobsByFilter(options, skill, location, (res: any) => {
+    //   setAdvancedFilteredjobs(res);
+    // });
 
-    getJobByJobId(jobId, (res: any) => {
+    getAllJobsPython(skill,resume_name,(res:any)=>{
+      console.log(res)
+      setAdvancedFilteredjobs(res);
+    })
+
+    // getJobByJobId(jobId, (res: any) => {
+    //   setJobIdData(res);
+    // });
+
+    getJobByJobIdPython(jobId, resume_name, (res: any) => {
       setJobIdData(res);
     });
   }, [opsValue, location, skill, filteredjobs, options, jobId]);

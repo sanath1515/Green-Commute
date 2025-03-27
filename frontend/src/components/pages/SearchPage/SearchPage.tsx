@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import theme from "../../../theme/theme";
+import { styled } from "@mui/material/styles";
+import {
+  Typography,
+  Box,
+} from "@mui/material";
 import SideBar from "../../organisms/SideBar/SideBar";
 import TopNavBar from "../../organisms/TopNavBar/TopNavBar";
 import JobDescription from "../../organisms/JobDescription/JobDescription";
 import Findjob from "../../organisms/Findjob/Findjob";
 import JobList from "../../molecules/Job-List/JobList";
-import { Typography } from "@material-ui/core";
 import Filters from "../../organisms/Filter/Filters";
 import {
   APPLY,
   BASED_ON_YOUR_SEARCH,
-  calculateDays,
   CLEARALL,
   cost,
   FILTER,
@@ -27,6 +28,7 @@ import {
   SAVE,
   UNSAVE,
   JOBCITY,
+  optionsType,
 } from "../../../Constants";
 import { useDispatch, useSelector } from "react-redux";
 import { greenState } from "../../../store/reducers";
@@ -35,166 +37,104 @@ import useAdvancedFilterSearch from "../../../customhooks/useAdvancedSearch";
 import Routes from "../../organisms/Routes/Routes";
 import { Button } from "../../atoms/Button/Button";
 import useJobDescription from "../../customhooks/useJobDescription";
+import FileUploadMUI from "../../organisms/FileUpload/FileUpload";
 
-const useStyles = makeStyles({
-  root: { display: "flex", maxWidth: 1440, width: "100%" },
-  inner: {
-    display: "flex",
-  },
-  jobdescription: {
-    width: 360,
-    marginTop: theme.spacing(9),
-    marginRight: theme.spacing(3),
-  },
-  search: {
-    marginLeft: "auto",
-    marginRight: "auto",
-    backgroundColor: "#fafafa",
-    paddingLeft: theme.spacing(10),
-    paddingRight: theme.spacing(0),
-  },
-  findjob: {
-    fontWeight: 600,
-    marginTop: theme.spacing(9),
-    marginBottom: theme.spacing(4),
-  },
-  row: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginTop: theme.spacing(8),
-    marginRight: theme.spacing(2),
-  },
-  based: {
-    color: theme.palette.grey["200"],
-  },
-  joblist: {
-    fontWeight: 600,
-  },
-  findjobclass: {
-    display: "flex",
-    alignItems: "center",
-    width: 700,
-    backgroundColor: "white",
-    padding: theme.spacing(0, 0),
-    borderRadius: 10,
-    border: "solid 1px #e3f3f6",
-  },
-  chips: {
-    display: "flex",
-    justifyContent: "flex-start",
-    maxWidth: 500,
-    height: "auto",
-    flexWrap: "wrap",
-  },
-  chip: {
-    marginRight: theme.spacing(2.5),
-    display: "flex",
-    justifyContent: "flex-start",
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: theme.spacing(2),
-  },
-  clearall: {
-    textTransform: "none",
-    fontFamily: "Montserrat",
-    fontSize: 14,
-    fontWeight: 600,
-    fontStretch: "normal",
-    fontStyle: "normal",
-    lineHeight: 1.29,
-    letterSpacing: 0.2,
-    textAlign: "left",
-    color: theme.palette.grey["600"],
-    float: "right",
-    marginRight: theme.spacing(3),
-  },
-  part: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
-  },
+const SearchWrapper = styled("div")({
+  display: "flex",
+  width: "100%",
 });
 
+const InnerWrapper = styled("div")({
+  display: "flex",
+  width: "100%",
+});
+
+const SearchContent = styled("div")(({ theme }) => ({
+  marginLeft: "auto",
+  marginRight: "auto",
+  backgroundColor: "#fafafa",
+  paddingLeft: theme.spacing(10),
+  paddingRight: theme.spacing(0),
+  width: "100%",
+}));
+
+const FindJobHeader = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
+  marginTop: theme.spacing(9),
+  marginBottom: theme.spacing(4),
+}));
+
+const ChipsWrapper = styled("div")(({ theme }) => ({
+  display: "flex",
+  justifyContent: "flex-start",
+  maxWidth: 500,
+  flexWrap: "wrap",
+}));
+
+const ChipBox = styled("div")(({ theme }) => ({
+  marginRight: theme.spacing(2.5),
+  marginBottom: theme.spacing(2),
+}));
+
+const Container = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "16px",
+  justifyContent: "flex-start",
+  overflow: "auto",
+  height: "500px",
+  "&::-webkit-scrollbar": {
+    width: "12px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "white",
+    borderRadius: "10px",
+    border: "3px solid white",
+  },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: "white",
+  },
+}));
+
 const SearchPage: React.FC = () => {
-  const classes = useStyles();
-  const [route, setRoute] = useState<boolean>(false);
-  const {
-    saveValue,
-    savealertGeneration,
-    applyValue,
-    applyalertGeneration,
-    stepbarindex,
-    savedJobsList,
-  } = useJobDescription();
-
+  const [route, setRoute] = useState(false);
+  const { saveValue, savealertGeneration, applyValue, applyalertGeneration, stepbarindex, savedJobsList } = useJobDescription();
   const dispatch = useDispatch();
-
-  const jobId = useSelector<greenState, greenState["jobId"]>((state) => {
-    return state.jobId;
-  });
-
+  const jobId = useSelector<greenState, greenState["jobId"]>((state) => state.jobId);
   const { advancedFilteredjobs, jobIdData } = useAdvancedFilterSearch([]);
+  const [jobs, setJobs] = useState<jobDataProp[]>(advancedFilteredjobs);
+  const options:optionsType = useSelector((state: greenState) => state.options);
+  const location = useSelector((state: greenState) => state.searchLocation);
+  const initiallocation = useSelector((state: greenState) => state.location);
+  const skill = useSelector((state: greenState) => state.searchSkill);
 
-  const options: any = useSelector<greenState, greenState["options"]>(
-    (state) => {
-      return state.options;
-    }
-  );
+  useEffect(() => {
+    setJobs(advancedFilteredjobs);
+  }, [advancedFilteredjobs]);
 
-  const location: string = useSelector<
-    greenState,
-    greenState["searchLocation"]
-  >((state) => {
-    return state.searchLocation;
-  });
+  const ellipse = (input: string, length: number) =>
+    input.length > length ? input.substring(0, length) + "..." : input;
 
-  const initiallocation: string = useSelector<
-    greenState,
-    greenState["location"]
-  >((state) => {
-    return state.location;
-  });
-
-  const skill: string = useSelector<greenState, greenState["searchSkill"]>(
-    (state) => {
-      return state.searchSkill;
-    }
-  );
-
-  const ellipse = (input: string, length: number) => {
-    if (input.length > 5) {
-      return input.substring(0, length) + "...";
-    }
-    return input;
-  };
-
-  useEffect(() => {}, [
-    options,
-    stepbarindex,
-    savedJobsList,
-    skill,
-    location,
-    savedJobsList,
-  ]);
-  const jobslist = advancedFilteredjobs.map((temp: jobDataProp) => (
+  const jobslist = jobs.map((temp: jobDataProp) => (
     <JobList
-      id={temp.id! + ""}
-      companyName={temp.companyName!}
-      dayscount={calculateDays(temp.dateAdded) + "d"}
-      jobRole={temp.jobProfile!}
-      location={temp.city!}
-      src={temp.imageSource!}
-      commuteRoutes={temp.commuteRoutes!}
+      key={temp.id}
+      id={temp.id + ""}
+      companyName={temp.companyName}
+      jobRole={temp.jobProfile}
+      location={temp.city}
+      description={temp.description}
+      salary={temp.salary}
+      sponsored={temp.sponsored}
+      jobPostingUrl={temp.jobPostingUrl}
+      percentage={temp.percentageMatch}
     />
   ));
 
   const savedjobs = savedJobsList.map((temp: jobDataProp) => (
     <JobList
-      id={temp.id! + ""}
+      key={temp.id}
+      id={temp.id + ""}
       companyName={temp.companyName!}
-      dayscount={calculateDays(temp.dateAdded) + "d"}
       jobRole={temp.jobProfile!}
       location={temp.city!}
       src={temp.imageSource!}
@@ -202,96 +142,48 @@ const SearchPage: React.FC = () => {
     />
   ));
 
-  const clickHandler = () => {
-    setRoute(true);
-  };
+  const clickHandler = () => setRoute(true);
+  const clickBackHandler = () => setRoute(false);
 
-  const checkInSavedJobs = () => {
-    for (let i = 0; i < savedJobsList.length; i++) {
-      if (savedJobsList[i].id! + "" === jobId) return false;
-    }
-    return true;
-  };
-
-  const clickBackHandler = () => {
-    setRoute(false);
-  };
-
-  const ClearAllHandler = () => {
-    dispatch({
-      type: "SET_OPTIONS",
-      payload: {
-        datePosted: [],
-        distance: [],
-        experienceLevel: [],
-        jobType: [],
-        transport: [],
-      },
-    });
-  };
+  const checkInSavedJobs = () => !savedJobsList.some(job => job.id! + "" === jobId);
 
   const chipsData = (
-    <div className={classes.part}>
-      <div className={classes.chips}>
-        {OPTIONS_HEADINGS.map((heading: string) =>
-          options[heading]!.map((op: any) => (
-            <Chips label={op} className={classes.chip} />
+    <Box display="flex" justifyContent="space-between" flexWrap="wrap" mt={2}>
+      <ChipsWrapper>
+        {OPTIONS_HEADINGS.map((heading) =>
+          options[heading]?.map((op: string) => (
+            <ChipBox key={op}>
+              <Chips label={op} />
+            </ChipBox>
           ))
+
         )}
-      </div>
-      <Button
-        name={CLEARALL}
-        className={classes.clearall}
-        onClick={ClearAllHandler}
-      />
-    </div>
+      </ChipsWrapper>
+    </Box>
   );
 
-  COMMUTE_ROUTES.headings;
-
   return (
-    <div className={classes.root}>
-      <SideBar />
-      <div>
+    <SearchWrapper>
+      <SideBar img={""} title={""} company={""} location={""} loc1={""} loc2={""} routePoints={[]} locHead={""} cost={""} imgMap={""} />
+      <Box width="100%">
         <TopNavBar location={initiallocation} src={topnavbarimage} />
-        <div className={classes.inner}>
-          <div className={classes.search}>
-            <div>
-              <Typography
-                variant="h4"
-                className={classes.findjob}
-                children={FIND_JOBS}
-              />
-              <Findjob
-                Skill={skill}
-                Location={location}
-                ClassName={classes.findjobclass}
-              />
-            </div>
-
-            <div>
-              <div className={classes.row}>
-                <Typography
-                  variant="h4"
-                  className={classes.joblist}
-                  children={JOBS_LIST}
-                />
-                <Filters button={FILTER} button1={CLEARALL} button2={APPLY} />
-              </div>
-              <Typography
-                variant="body2"
-                className={classes.based}
-                children={BASED_ON_YOUR_SEARCH}
-              />
-            </div>
-
-            <div>{chipsData}</div>
-            {stepbarindex !== "3" && <div> {jobslist}</div>}
+        <InnerWrapper>
+          <SearchContent>
+            <FindJobHeader variant="h4">Upload Resume</FindJobHeader>
+            <FileUploadMUI setJobs={setJobs} />
+            <FindJobHeader variant="h4">{FIND_JOBS}</FindJobHeader>
+            <Findjob Skill={skill} Location={location} ClassName="findjobclass" OnClick={setJobs} />
+            <Box display="flex" justifyContent="space-between" mt={8}>
+              <Typography variant="h4">{JOBS_LIST}</Typography>
+            </Box>
+            <Typography variant="body2">{BASED_ON_YOUR_SEARCH}</Typography>
+            {chipsData}
+            {stepbarindex !== "3" && <Container>{jobslist}</Container>}
             {stepbarindex === "3" && savedjobs}
-          </div>
-          {!route && (
-            <div className={classes.jobdescription}>
-              {advancedFilteredjobs.length !== 0 && (
+          </SearchContent>
+          {!route ? (
+            <Box width="360px" mt={9} mr={3}>
+              {jobs.length !== 0 && (
                 <JobDescription
                   img={jobIdData!.imageSource!}
                   title={jobIdData!.jobProfile!}
@@ -305,11 +197,11 @@ const SearchPage: React.FC = () => {
                   applyButtonClick={applyalertGeneration}
                   bigButton={GREENCOMMUTEROUTES}
                   bigButtonClick={clickHandler}
+                  job_url={jobIdData.jobPostingUrl}
                 />
               )}
-            </div>
-          )}
-          {route && (
+            </Box>
+          ) : (
             <Routes
               img={jobIdData!.imageSource!}
               title={jobIdData!.jobProfile!}
@@ -323,11 +215,12 @@ const SearchPage: React.FC = () => {
               imgMap={imgMap}
               backHandler={clickBackHandler}
               applyB={checkInSavedJobs()}
+              job_url={jobIdData.jobPostingUrl}
             />
           )}
-        </div>
-      </div>
-    </div>
+        </InnerWrapper>
+      </Box>
+    </SearchWrapper>
   );
 };
 

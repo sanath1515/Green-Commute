@@ -1,64 +1,33 @@
 import React from "react";
-import DirectionsBusIcon from "@material-ui/icons/DirectionsBus";
-import DriveEtaOutlinedIcon from "@material-ui/icons/DriveEtaOutlined";
-import MotorcycleOutlinedIcon from "@material-ui/icons/MotorcycleOutlined";
-import TrainOutlinedIcon from "@material-ui/icons/TrainOutlined";
+import TrainOutlinedIcon from "@mui/icons-material/TrainOutlined";
+import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
+import DriveEtaOutlinedIcon from "@mui/icons-material/DriveEtaOutlined";
+
 import { TRANSPORT_ICONS } from "../../../Constants";
-export type iconProps = {
+
+export type IconProps = {
   name?: string;
   className?: string;
-  onClick?: (event: any) => void;
+  onClick?: (event: React.MouseEvent<SVGSVGElement>) => void;
   id?: string;
 };
 
-export const Icons1: React.FC<iconProps> = ({
+// Map icon name to component
+const ICON_MAP: Record<string, React.ElementType> = {
+  [TRANSPORT_ICONS[0]]: TrainOutlinedIcon,
+  [TRANSPORT_ICONS[1]]: DirectionsBusIcon,
+  [TRANSPORT_ICONS[2]]: DriveEtaOutlinedIcon,
+  default: DriveEtaOutlinedIcon,
+};
+
+export const Icons1: React.FC<IconProps> = ({
   name,
   className,
   onClick,
   id,
 }) => {
-  return (
-    <div>
-      {(() => {
-        switch (name) {
-          case TRANSPORT_ICONS[0]:
-            return (
-              <TrainOutlinedIcon
-                className={className}
-                onClick={onClick}
-                id={id}
-              />
-            );
-          case TRANSPORT_ICONS[1]:
-            return (
-              <DirectionsBusIcon
-                className={className}
-                onClick={onClick}
-                id={id}
-              />
-            );
-
-          case TRANSPORT_ICONS[2]:
-            return (
-              <DriveEtaOutlinedIcon
-                className={className}
-                onClick={onClick}
-                id={id}
-              />
-            );
-
-          default:
-            return (
-              <MotorcycleOutlinedIcon
-                className={className}
-                onClick={onClick}
-                id={id}
-              />
-            );
-        }
-      })()}
-    </div>
-  );
+  const IconComponent = name && ICON_MAP[name] ? ICON_MAP[name] : ICON_MAP.default;
+  return <IconComponent className={className} onClick={onClick} id={id} />;
 };
 
 export default Icons1;

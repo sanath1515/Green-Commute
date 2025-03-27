@@ -1,120 +1,174 @@
 import React from "react";
-import SideBar from "../../organisms/SideBar/SideBar";
-import TopNavBar from "../../organisms/TopNavBar/TopNavBar";
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography } from "@material-ui/core";
-import Findjob from "../../organisms/Findjob/Findjob";
-import Filters from "../../organisms/Filter/Filters";
-import { COMMUTE_ROUTES, jobDataProp } from "../../../Constants";
-import JobCard from "../../molecules/JobCard/JobCard";
-import useJobsList from "../../customhooks/useJobsList";
-import { useSelector } from "react-redux";
-import { greenState } from "../../../store/reducers";
+import {
+  Typography,
+  Box,
+  Divider,
+  useTheme,
+  InputAdornment,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Aqi from "../../molecules/AQI/Aqi";
+import StepBar from "../../molecules/StepBar/StepBar";
+import Navicons from "../../atoms/dashboardicons/Navicons";
+import { Button } from "../../atoms/Button/Button";
+import IconInputField from "../../atoms/IconInputField/iconindex";
+import ChipInput from "../../molecules/ChipInput/ChipInput";
+import { LANDING_PAGE_MESSAGE } from "../../../Constants";
+import useJobSkills from "../../customhooks/useJobSkills";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginLeft: "270px",
-    paddingLeft: "60px",
-    backgroundColor: "#fafafa",
-  },
-  grid: { width: "1074px" },
-  heading5: {
-    fontSize: "20px",
-    marginTop: "30px",
-    fontWeight: 600,
-  },
-  heading: {
-    marginRight: "722px",
-    display: "inline-block",
-    marginTop: "30px",
-    fontWeight: 600,
-  },
-  find: {
-    marginTop: "15px",
-    display: "flex",
-    alignItems: "center",
-    width: "1050px",
-    borderRadius: "6px",
-    border: "solid 1px #e3f3f6",
-  },
-  root1: {
-    marginLeft: "260px",
-  },
-  text: { marginTop: "3px", marginBottom: "20px", color: "#5f7381" },
+// Styled
+const Container = styled(Box)({
+  display: "flex",
+  overflowX: "hidden",
+  overflowY: "hidden",
+});
+
+const StepSection = styled(Box)({
+  width: 590,
+  flexGrow: 1,
+});
+
+const AQISection = styled(Box)({
+  overflowX: "hidden",
+  overflowY: "hidden",
+  height: 690,
+});
+
+const InputWrapper = styled(Box)({
+  width: 500,
+  height: 60,
+  marginLeft: 80,
+  marginTop: 20,
+  border: "1px solid #9bbdcb",
+  borderRadius: 10,
+});
+
+const StyledChip = styled(ChipInput)(({ theme }) => ({
+  backgroundColor: "white",
+  border: "1px solid #5ac568",
+  borderRadius: 5,
+  marginLeft: 5,
+  fontFamily: "Montserrat",
+  fontSize: 15,
 }));
 
-function LandingJobs() {
-  const { jobcards } = useJobsList();
-  const location: string = useSelector<
-    greenState,
-    greenState["searchLocation"]
-  >((state) => {
-    return state.searchLocation;
-  });
+const JobSkills: React.FC<{ status: number }> = ({ status }) => {
+  const theme = useTheme();
+  const {
+    inputValue,
+    arrayInput,
+    aqiCount,
+    handleInputChange,
+    handleFinishClick,
+    handleKeyDown,
+    handleDelete,
+    handleBackClick,
+    placeholder,
+  } = useJobSkills();
 
-  const initiallocation: string = useSelector<
-    greenState,
-    greenState["location"]
-  >((state) => {
-    return state.location;
-  });
-
-  const skill: string = useSelector<greenState, greenState["searchSkill"]>(
-    (state) => {
-      return state.searchSkill;
-    }
-  );
-
-  const classes = useStyles();
   return (
-    <>
-      <SideBar />
-      <div className={classes.root1}>
-        <TopNavBar location={initiallocation} src={COMMUTE_ROUTES.userImg} />
-      </div>
+    <Container>
+      <StepSection>
+        <StepBar status={status} />
+        <Divider sx={{ mt: 6, borderColor: theme.palette.grey[100] }} />
 
-      <div className={classes.root}>
-        <Typography variant="h5" className={classes.heading5}>
-          {COMMUTE_ROUTES.findJob}
-        </Typography>
-
-        <Findjob ClassName={classes.find} Skill={skill} Location={location} />
-
-        <Typography variant="h5" className={classes.heading}>
-          {COMMUTE_ROUTES.recommend}
-        </Typography>
-        <Filters button="Filter" button1="apply" button2="clear all" />
-        <Typography variant="body2" className={classes.text}>
-          {COMMUTE_ROUTES.recommendChild}
-        </Typography>
-        <Grid
-          container
-          spacing={5}
-          justifyContent="flex-start"
-          className={classes.grid}
+        <Typography
+          variant="h2"
+          sx={{
+            width: 550,
+            height: 84,
+            mt: 10,
+            ml: 10,
+            mr: 30,
+            fontSize: 32,
+            fontWeight: 600,
+            lineHeight: 1.31,
+          }}
         >
-          {jobcards.map((jobs: jobDataProp) => (
-            <Grid key={jobs.id} item xs={4}>
-              <JobCard
-                src={jobs.imageSource}
-                days={Math.abs(
-                  Math.ceil(
-                    (new Date(jobs.dateAdded).getTime() -
-                      new Date(Date.now()).getTime()) /
-                      (1000 * 3600 * 24)
-                  )
-                )}
-                jobRole={jobs.jobProfile}
-                companyName={jobs.companyName}
-                location={jobs.city}
-                commuteRoute={jobs.commuteRoutes}
-              ></JobCard>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-    </>
-  );
-}
+          {LANDING_PAGE_MESSAGE.LANDING_PAGE_COMMUTE_HEADING}
+        </Typography>
 
-export default LandingJobs;
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={handleBackClick}
+          name="Back"
+          variant="text"
+          sx={{
+            height: 50,
+            width: 85,
+            color: "#9bbdcb",
+            ml: 10,
+            mt: 3,
+            textTransform: "none",
+          }}
+        />
+
+        <Typography variant="h5" sx={{ width: 304, ml: 10, fontWeight: 600 }}>
+          {LANDING_PAGE_MESSAGE.JOB_SKILLS_HEADING}
+        </Typography>
+
+        <InputWrapper>
+          <IconInputField
+            icon={<Navicons name="work" sx={{ color: "#9bbdcb", ml: 2, my: 2 }} />}
+            placeholder={placeholder}
+            value={inputValue}
+            variant="filled"
+            size="medium"
+            color="primary"
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onBlur={handleKeyDown}
+            inputProps={{
+              disableUnderline: true,
+              startAdornment: arrayInput?.map((item) => (
+                <StyledChip
+                  key={item}
+                  label={item}
+                  onDelete={() => handleDelete(item)}
+                />
+              )),
+            }}
+          />
+        </InputWrapper>
+
+        <Box sx={{ display: "flex", ml: 10, mt: 3 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            name="Finish"
+            onClick={handleFinishClick}
+            sx={{
+              width: 136,
+              height: 50,
+              fontFamily: "Montserrat",
+              borderRadius: "15px",
+              textTransform: "none",
+              color: "white",
+            }}
+          />
+          <Button
+            variant="outlined"
+            color="primary"
+            name="Skip"
+            sx={{
+              width: 136,
+              height: 50,
+              ml: 2,
+              fontFamily: "Montserrat",
+              borderRadius: "15px",
+              visibility: "hidden",
+              textTransform: "none",
+            }}
+          />
+        </Box>
+      </StepSection>
+
+      <AQISection>
+        <Aqi step={status} number={aqiCount} />
+      </AQISection>
+    </Container>
+  );
+};
+
+export default JobSkills;

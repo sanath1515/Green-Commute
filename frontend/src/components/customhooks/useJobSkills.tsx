@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { getAllJobs } from "../../axios/ApiProvider";
 import { jobDataProp, PATHS, PLACEHOLDERS } from "../../Constants";
 
@@ -12,7 +12,7 @@ const useJobSkills = () => {
   const [arrayInput, setArrayInput] = useState<Array<string>>([]);
   const [aqiCount, setaqiCount] = useState<string>();
   const [placeholder, setPlaceholder] = useState<string>(PLACEHOLDERS.SKILLS);
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const useJobSkills = () => {
     setArrayInput(newSelectedItem);
   };
   const handleFinishClick = () => {
-    history.push(PATHS.JOB_SEARCH);
+    navigate(PATHS.JOB_SEARCH);
   };
 
   return {

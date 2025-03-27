@@ -11,10 +11,41 @@ export const getAllJobs = async (callback?: any) => {
   }
 };
 
+export const getAllJobsPython = async (query:string, filename:string, callback?: any) => {
+  try {
+
+    const data = {
+      query:query,
+      resume_name: filename,
+    }
+
+    const res = await axios.post(
+      `http://127.0.0.1:5000/jobs`,
+      data
+    );
+    const jsonData = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+    callback(jsonData);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
 export const getJobByJobId = async (id: string, callback?: any) => {
   try {
     const res = await axios.get(
       `${process.env.REACT_APP_UNSPLASHED_URL}api/v1/jobs/${id}/`
+    );
+    callback(res.data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getJobByJobIdPython = async (id: string, resumeName:string, callback?: any) => {
+  try {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/jobs/${id}/?resume_name=${resumeName}`
     );
     callback(res.data);
   } catch (err) {
@@ -153,6 +184,7 @@ export const getJobsByFilter = async (
 
     const res = await axios.get(
       `${process.env.REACT_APP_UNSPLASHED_URL}api/v1/jobs/?${str}`
+
     );
     callback(res.data);
   } catch (err) {

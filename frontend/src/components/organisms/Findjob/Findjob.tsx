@@ -1,99 +1,97 @@
-import { makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Typography, Divider, useTheme } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import SearchIcon from "@mui/icons-material/Search";
 import IconInputField from "../../atoms/IconInputField/iconindex";
-import SearchIcon from "@material-ui/icons/Search";
-import { ButtonIcon } from "../../atoms/Buttonicon/Buttonicon";
 import Navicons from "../../atoms/dashboardicons/Navicons";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
-import { PATHS } from "../../../Constants";
+import { ButtonIcon } from "../../atoms/Buttonicon/Buttonicon";
+import { getAllJobsPython } from "../../../axios/ApiProvider";
+import { jobDataProp, PATHS } from "../../../Constants";
+import { greenState } from "../../../store/reducers";
 
-export type prop1 = {
+// Props type
+export type FindJobProps = {
   Skill?: string;
   Location?: string;
   ClassName?: string;
+  OnClick?: (jobs: jobDataProp[]) => void;
 };
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    alignItems: "center",
-    width: 500,
-  },
-  line: {
-    height: 40,
-    color: theme.palette.grey["600"],
-    border: "0.1px solid",
-    marginRight: theme.spacing(2),
-  },
-  btn: {
-    color: "white",
-    height: 50,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 10,
-    width: 70,
-  },
+
+// Styled components
+const Root = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  width: 500,
+});
+
+const StyledButton = styled(ButtonIcon)(({ theme }) => ({
+  color: "white",
+  height: 50,
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 10,
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 10,
+  width: 70,
 }));
 
-const Findjob: React.FC<prop1> = ({ Skill, Location, ClassName }) => {
-  const classes = useStyles();
+const Findjob: React.FC<FindJobProps> = ({ Skill = "", Location = "", ClassName, OnClick }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const theme = useTheme();
 
-  const [skill, setSkill] = useState<string>(Skill!);
-  const [location, setLocation] = useState<string>(Location!);
+  const [skill, setSkill] = useState<string>(Skill);
+  const [location, setLocation] = useState<string>(Location);
 
-  const onchangeHandler1 = (event: any) => {
+  const resume_name = useSelector<greenState, greenState["resumeName"]>(
+    (state) => state.resumeName
+  );
+
+  const handleSkillChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSkill(event.target.value);
   };
 
-  const onchangeHandler2 = (event: any) => {
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(event.target.value);
   };
 
-  const clickHandler = (event: any) => {
-    dispatch({
-      type: "SET_SEARCH_SKILL",
-      payload: skill,
-    });
-    dispatch({
-      type: "SET_SEARCH_LOCATION",
-      payload: location,
-    });
-    history.push(PATHS.ADVANCED_SEARCH);
+  const handleClick = () => {
+    dispatch({ type: "SET_SEARCH_SKILL", payload: skill });
+    dispatch({ type: "SET_SEARCH_LOCATION", payload: location });
+
+    getAllJobsPython(skill, resume_name, OnClick);
+    navigate(PATHS.ADVANCED_SEARCH);
   };
 
   return (
-    <div className={ClassName}>
+    <Root className={ClassName}>
       <IconInputField
         icon={<Navicons name="work" />}
         placeholder="Search skills"
         value={skill}
-        onChange={onchangeHandler1}
-        inputProps={{
-          disableUnderline: "underlineFlag",
-        }}
+        onChange={handleSkillChange}
+        inputProps={{ disableUnderline: true }}
       />
-      <div className={classes.line}></div>
+      {/* Uncomment to use Location Field */}
+      {/* 
+      <Divider orientation="vertical" flexItem sx={{ mx: 2, height: 40, borderColor: theme.palette.grey[600] }} />
       <IconInputField
         icon={<Navicons name="location" />}
         placeholder="Location"
         value={location}
-        onChange={onchangeHandler2}
-        inputProps={{
-          disableUnderline: "underlineFlag",
-        }}
+        onChange={handleLocationChange}
+        inputProps={{ disableUnderline: true }}
       />
-      <ButtonIcon
+      */}
+      <StyledButton
         variant="contained"
         color="primary"
-        className={classes.btn}
-        onClick={clickHandler}
+        onClick={handleClick}
       >
         <SearchIcon />
-      </ButtonIcon>
-    </div>
+      </StyledButton>
+    </Root>
   );
 };
 

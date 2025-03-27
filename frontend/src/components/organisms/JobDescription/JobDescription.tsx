@@ -1,119 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import theme from "../../../theme/theme";
+import { Typography, Divider, Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { Button } from "../../atoms/Button/Button";
-
-const useStyles = makeStyles({
-  root: {
-    paddingLeft: 20,
-    paddingRight: 40,
-    width: 300,
-    color: theme.palette.grey["200"],
-    float: "right",
-  },
-  part1: {
-    display: "flex",
-    marginLeft: 10,
-  },
-  details: {
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: 20,
-  },
-  img: {
-    width: 50,
-    height: 50,
-  },
-  title: {
-    color: theme.palette.grey[700],
-    textAlign: "left",
-  },
-  company: {
-    color: theme.palette.grey["200"],
-    textAlign: "left",
-  },
-  location: {
-    color: theme.palette.grey["200"],
-    textAlign: "left",
-    textTransform: "none",
-  },
-  hr: {
-    color: theme.palette.grey["800"],
-    marginBottom: theme.spacing(6.25),
-    marginTop: theme.spacing(3.75),
-    paddingLeft: theme.spacing(2.5),
-    paddingRight: theme.spacing(2.5),
-    border: "solid 0.1px",
-  },
-  part2: {
-    marginLeft: theme.spacing(2),
-  },
-  heading: {
-    textAlign: "left",
-    marginBottom: theme.spacing(2),
-    color: theme.palette.grey[700],
-  },
-  part3: {
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: theme.spacing(2),
-  },
-  point: {
-    textAlign: "left",
-    color: theme.palette.grey[200],
-    fontFamily: "Montserrat",
-    fontSize: 14,
-    fontStretch: "normal",
-    fontStyle: "normal",
-    lineHeight: 1.57,
-    letterSpacing: 0.1,
-  },
-  list: {
-    marginTop: theme.spacing(0),
-    paddingLeft: 15,
-  },
-  buttons: {
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  button1: {
-    borderRadius: 10,
-    marginRight: 20,
-    textTransform: "none",
-    fontWeight: 600,
-    fontFamily: "Montserrat",
-    width: 98,
-  },
-  button2: {
-    color: "#FFF",
-    borderRadius: 10,
-    textTransform: "none",
-    fontWeight: 600,
-    fontFamily: "Montserrat",
-    width: 98,
-  },
-  bigButton: {
-    color: "#FFF",
-    borderRadius: 5,
-    width: "auto",
-    textTransform: "none",
-    fontFamily: "Montserrat",
-    fontWeight: 600,
-    marginLeft: "auto",
-    marginRight: "auto",
-    paddingTop: theme.spacing(2.5),
-    paddingBottom: theme.spacing(2.5),
-  },
-  hr1: {
-    color: theme.palette.grey[800],
-    marginTop: theme.spacing(6.25),
-    marginBottom: theme.spacing(2.5),
-    paddingLeft: theme.spacing(2.5),
-    paddingRight: theme.spacing(2.5),
-    border: "solid 0.1px",
-  },
-});
 
 export type JobDescriptionProps = {
   img: string;
@@ -128,7 +16,88 @@ export type JobDescriptionProps = {
   applyButtonClick?: () => void;
   bigButton: string;
   bigButtonClick?: () => void;
+  job_url: string;
 };
+
+// Styled Components
+const Root = styled(Box)(({ theme }) => ({
+  paddingLeft: 20,
+  paddingRight: 40,
+  width: 300,
+  float: "right",
+}));
+
+const Part1 = styled("div")({
+  display: "flex",
+  marginLeft: 10,
+});
+
+const Details = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  marginLeft: 20,
+}));
+
+const Image = styled("img")({
+  width: 50,
+  height: 50,
+});
+
+const TextGrey = (color: string) =>
+  styled(Typography)(({ theme }) => ({
+    color,
+    textAlign: "left",
+  }));
+
+const Title = TextGrey("#324552");
+const Company = TextGrey("#5f7381");
+const Location = TextGrey("#5f7381");
+
+const Heading = styled(Typography)(({ theme }) => ({
+  textAlign: "left",
+  marginBottom: theme.spacing(2),
+  color: theme.palette.grey[700],
+}));
+
+const Point = styled("li")(({ theme }) => ({
+  textAlign: "left",
+  color: theme.palette.grey[200],
+  fontFamily: "Montserrat",
+  fontSize: 14,
+  lineHeight: 1.57,
+  letterSpacing: 0.1,
+}));
+
+const Hr = styled("hr")(({ theme }) => ({
+  color: theme.palette.grey[800],
+  margin: `${theme.spacing(3.75)} 0`,
+  paddingLeft: theme.spacing(2.5),
+  paddingRight: theme.spacing(2.5),
+  border: "solid 0.1px",
+}));
+
+const HrBottom = styled(Hr)(({ theme }) => ({
+  marginTop: theme.spacing(6.25),
+  marginBottom: theme.spacing(2.5),
+}));
+
+const ButtonRow = styled(Box)({
+  marginTop: 15,
+  marginBottom: 15,
+});
+
+const BigButton = styled(Button)(({ theme }) => ({
+  color: "#FFF",
+  borderRadius: 5,
+  width: "auto",
+  textTransform: "none",
+  fontFamily: "Montserrat",
+  fontWeight: 600,
+  marginLeft: "auto",
+  marginRight: "auto",
+  paddingTop: theme.spacing(2.5),
+  paddingBottom: theme.spacing(2.5),
+}));
 
 const JobDescription: React.FC<JobDescriptionProps> = ({
   company,
@@ -143,77 +112,80 @@ const JobDescription: React.FC<JobDescriptionProps> = ({
   applyButtonClick,
   bigButton,
   bigButtonClick,
+  job_url,
 }) => {
-  const classes = useStyles();
-  const listOfPoints = points.map((point: string) => (
-    <li className={classes.point}>{point}</li>
-  ));
+  const openUrl = () => {
+    window.open(job_url, "_blank");
+  };
+
+  const modifyCompanyName = (companyName: string) =>
+    companyName.replace(/[^a-zA-Z0-9]/g, "").replace(/\s+/g, "");
+
+  const imageUrl = `https://img.logo.dev/${modifyCompanyName(company)}.com?token=pk_a9Df6OvsTXGmVKiozucqRg`;
 
   return (
-    <div className={classes.root}>
-      <div className={classes.part1}>
-        <img src={img} className={classes.img}></img>
-        <div className={classes.details}>
-          <Typography
-            variant="subtitle1"
-            className={classes.title}
-            children={title}
-          />
-          <Typography
-            variant="overline"
-            className={classes.company}
-            children={company}
-          />
-          <Typography
-            variant="overline"
-            className={classes.location}
-            children={location}
-          />
-
-          <div className={classes.buttons}>
+    <Root>
+      <Part1>
+        <Image src={imageUrl} />
+        <Details>
+          <Title variant="subtitle1">{title}</Title>
+          <Company variant="overline">{company}</Company>
+          <Location variant="overline">{location}</Location>
+          <ButtonRow>
             <Button
               onClick={saveButtonClick}
               variant="outlined"
               color="primary"
-              className={classes.button1}
               name={button1}
+              sx={{
+                borderRadius: 2,
+                marginRight: 2,
+                fontWeight: 600,
+                fontFamily: "Montserrat",
+                width: 98,
+              }}
             />
             <Button
-              onClick={applyButtonClick}
+              onClick={openUrl}
               variant="contained"
               color="primary"
-              className={classes.button2}
               name={button2}
+              sx={{
+                color: "#FFF",
+                borderRadius: 2,
+                fontWeight: 600,
+                fontFamily: "Montserrat",
+                width: 98,
+              }}
             />
-          </div>
-        </div>
-      </div>
-      <hr className={classes.hr} />
-      <div className={classes.part2}>
-        <Typography
-          variant="subtitle1"
-          children="Description"
-          className={classes.heading}
-        />
-        <Typography variant="body2" children={description} />
-      </div>
-      <hr className={classes.hr1} />
-      <div className={classes.part3}>
-        <Typography
-          variant="subtitle1"
-          children="What it takes"
-          className={classes.heading}
-        />
-        <ul className={classes.list}>{listOfPoints}</ul>
-        <Button
+          </ButtonRow>
+        </Details>
+      </Part1>
+
+      <Hr />
+
+      <Box ml={2}>
+        <Heading variant="subtitle1">Description</Heading>
+        <Typography variant="body2">{description}</Typography>
+      </Box>
+
+      <HrBottom />
+
+      <Box ml={2}>
+        <Heading variant="subtitle1">What it takes</Heading>
+        <ul>
+          {points.map((point, idx) => (
+            <Point key={idx}>{point}</Point>
+          ))}
+        </ul>
+        <BigButton
           variant="contained"
           color="primary"
-          className={classes.bigButton}
           name={bigButton}
           onClick={bigButtonClick}
         />
-      </div>
-    </div>
+      </Box>
+    </Root>
   );
 };
 

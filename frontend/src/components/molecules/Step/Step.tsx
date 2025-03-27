@@ -1,8 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import theme from "../../../theme/theme";
-import { Typography } from "@material-ui/core";
-import Avatar from "@mui/material/Avatar";
+import { Typography, Avatar, useTheme } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 export type StepProps = {
   number: string;
@@ -10,49 +8,47 @@ export type StepProps = {
   completed: boolean;
 };
 
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-  },
-  textFalse: {
-    marginLeft: theme.spacing(2.5),
-    marginTop: theme.spacing(1.5),
-    color: theme.palette.grey[200],
-  },
-  textTrue: {
-    marginLeft: theme.spacing(2.5),
-    marginTop: theme.spacing(1.5),
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-  },
+// Styled components using MUI's styled
+const Root = styled("div")({
+  display: "flex",
+  alignItems: "center",
 });
 
+const StyledAvatar = styled(Avatar)({
+  width: 40,
+  height: 40,
+});
+
+const StepText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== "completed",
+})<{ completed: boolean }>(({ theme, completed }) => ({
+  marginLeft: theme.spacing(2.5),
+  marginTop: theme.spacing(1.5),
+  color: completed ? theme.palette.primary.main : theme.palette.grey[200],
+}));
+
 const Step: React.FC<StepProps> = ({ number, name, completed }) => {
-  const classes = useStyles();
+  const theme = useTheme();
+
   return (
-    <div className={classes.root}>
-      <Avatar
+    <Root>
+      <StyledAvatar
         alt={number}
-        src="sdbkvd"
-        className={classes.avatar}
         sx={{
-          backgroundColor: completed
+          bgcolor: completed
             ? theme.palette.primary.main
             : theme.palette.grey[100],
           color: completed
             ? theme.palette.success.light
             : theme.palette.grey[200],
         }}
-      />
-      <Typography
-        children={name}
-        variant="h6"
-        color="primary"
-        className={completed ? classes.textTrue : classes.textFalse}
-      />
-    </div>
+      >
+        {number}
+      </StyledAvatar>
+      <StepText variant="h6" completed={completed}>
+        {name}
+      </StepText>
+    </Root>
   );
 };
 

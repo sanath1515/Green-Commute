@@ -1,27 +1,25 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Step from "../Step/Step";
 import { StepBarData } from "../../../Constants";
-
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    width: 790,
-    justifyContent: "space-around",
-  },
-});
+import { styled } from "@mui/material/styles";
 
 export type StepBarProps = {
   status: number;
 };
 
+// Styled container
+const Root = styled("div")(({ theme }) => ({
+  display: "flex",
+  width: 790,
+  justifyContent: "space-around",
+}));
+
 const StepBar: React.FC<StepBarProps> = ({ status }) => {
-  const classes = useStyles();
   const steps = StepBarData.map((step) => (
-    <Step {...step} completed={parseInt(step.number) <= status} />
+    <Step key={step.number} {...step} completed={parseInt(step.number) <= status} />
   ));
 
-  return <div className={classes.root}>{steps}</div>;
+  return <Root>{steps}</Root>;
 };
 
 export default StepBar;

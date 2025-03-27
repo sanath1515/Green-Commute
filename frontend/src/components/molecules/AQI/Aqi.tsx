@@ -1,74 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import { AqiData, jobCountData } from "../../../Constants";
-import Count from "../Jobcount/Count";
-import theme from "../../../theme/theme";
+import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { AqiData } from "../../../Constants";
+import Count from "../Jobcount/Count";
 import { greenState } from "../../../store/reducers";
-
-const useStyles = makeStyles({
-  root: {
-    width: "650px",
-    height: "850px",
-    backgroundColor: "#e7fce0",
-    alignItems: "center",
-    alignContent: "center",
-    display: "flex",
-    flexDirection: "column",
-  },
-  image: {
-    flexGrow: 0,
-    marginBottom: "20px",
-    objectFit: "contain",
-    position: "relative",
-    top: "150px",
-  },
-  text: {
-    //no number
-    margin: "10px 0 0",
-    color: "#19293b",
-    position: "relative",
-    top: "225px",
-    width: 500,
-    textAlign: "center",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-  text1: {
-    margin: "40px 0 0",
-    color: "#19293b",
-    position: "relative",
-    top: "150px",
-    width: 500,
-    textAlign: "center",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-  number: {
-    position: "relative",
-    top: "175px",
-    marginLeft: "auto",
-    marginRight: "auto",
-    fontSize: "100px",
-    color: "#19293b",
-    width: "auto",
-    height: "122px",
-    fontWeight: "normal",
-  },
-  mock: {
-    display: "flex",
-    justifyContent: "space-around",
-    position: "relative",
-    top: "150px",
-    width: "500px",
-    marginTop: theme.spacing(5),
-    fontWeight: 300,
-  },
-  job: {
-    // marginLeft:theme.spacing()
-  },
-});
 
 export type AqiProps = {
   step: number;
@@ -76,38 +11,63 @@ export type AqiProps = {
 };
 
 const Aqi: React.FC<AqiProps> = ({ step, number }) => {
-  const classes = useStyles();
-
-  const workLocations: string[] = useSelector<
-    greenState,
-    greenState["worklocations"]
-  >((state) => {
-    return state.worklocations;
-  });
+  const workLocations: string[] = useSelector<greenState, greenState["worklocations"]>(
+    (state) => state.worklocations
+  );
 
   const aqis = ["830", "920"];
 
   const jobs = workLocations.slice(0, 2).map((temp, index) => (
-    <div className={classes.job}>
+    <Box key={index} sx={{ display: "flex", justifyContent: "center" }}>
       <Count city={temp} number={aqis[index % 2]} />
-    </div>
+    </Box>
   ));
+
   return (
-    <div className={classes.root}>
-      <img className={classes.image} src={AqiData[step - 1].img} />
+    <Box
+      sx={{
+        width: 650,
+        height: 850,
+        backgroundColor: "#e7fce0",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <img
+        src={AqiData[step - 1].img}
+        style={{
+          flexGrow: 0,
+          marginBottom: 20,
+          objectFit: "contain",
+          position: "relative",
+          top: 150,
+        }}
+      />
       {number && step !== 2 && (
-        <Typography className={classes.number} variant="h3">
+        <Typography variant="h3" sx={{ fontSize: 100, color: "#19293b", mt: 4, position: "relative", top: 175 }}>
           {number}
         </Typography>
       )}
-      {number && step === 2 && <div className={classes.mock}>{jobs}</div>}
+      {number && step === 2 && (
+        <Box sx={{ display: "flex", justifyContent: "space-around", width: 500, mt: 5, position: "relative", top: 150 }}>
+          {jobs}
+        </Box>
+      )}
       <Typography
-        className={!number ? classes.text : classes.text1}
         variant="h3"
+        sx={{
+          mt: number ? 5 : 1,
+          color: "#19293b",
+          position: "relative",
+          top: number ? 150 : 225,
+          textAlign: "center",
+          width: 500,
+        }}
       >
         {number ? AqiData[step - 1].textWithNum : AqiData[step - 1].textNoNum}
       </Typography>
-    </div>
+    </Box>
   );
 };
 

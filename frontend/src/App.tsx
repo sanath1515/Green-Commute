@@ -1,62 +1,36 @@
-import { ThemeProvider } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
 import ScrollToTop from "./routing/ScrollToTop";
 import { greenState } from "./store/reducers";
 import theme from "./theme/theme";
-import { getAllJobData } from "./axios/ApiProvider";
-import { useDispatch } from "react-redux";
-import JobCard from "./components/molecules/JobCard/JobCard";
-import JobDescription from "./components/organisms/JobDescription/JobDescription";
-import SideBar from "./components/organisms/SideBar/SideBar";
+import { getAllJobs } from "./axios/ApiProvider";
 import { jobDataProp, PATHS } from "./Constants";
 import LandingPage from "./components/pages/LandingPage/LandingPage";
 import SearchPage from "./components/pages/SearchPage/SearchPage";
 import LandingJobs from "./components/pages/LandingJobs/LandingJobs";
 
 export const App = () => {
-  // To get value from Redux Store
+  const stepId = useSelector<greenState, greenState["step"]>((state) => state.step);
+  const dispatch = useDispatch();
 
-  // const stepId = useSelector<greenState, greenState["step"]>((state) => {
-  //   console.log(state);
+  useEffect(() => {
+    dispatch({ type: "SET_STEP", payload: "2" });
 
-  //   return state.step;
-  // });
-
-  // console.log(stepId);
-
-  // // To update Value in Redux Store
-  // const dispatch = useDispatch();
-  // dispatch({ type: "SET_STEP", payload: "2" });
-  // console.log(stepId);
-
-  // fetch data
-
-  // useEffect(() => {
-  //   getAllJobData((res: jobDataProp[]) => {
-  //     console.log(res);
-  //   });
-  // }, []);
+    getAllJobs((res: jobDataProp[]) => {
+      console.log("Fetched jobs:", res);
+    });
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
-      <Router>
         <ScrollToTop />
-        <Switch>
-          <Route
-            path={PATHS.LANDING_PAGE}
-            exact
-            component={LandingPage}
-          ></Route>
-          <Route path={PATHS.JOB_SEARCH} exact component={LandingJobs}></Route>
-          <Route
-            path={PATHS.ADVANCED_SEARCH}
-            exact
-            component={SearchPage}
-          ></Route>
-        </Switch>
-      </Router>
+        <Routes>
+          <Route path={PATHS.LANDING_PAGE} element={<LandingPage />} />
+          <Route path={PATHS.JOB_SEARCH} element={<LandingJobs status={0} />} />
+          <Route path={PATHS.ADVANCED_SEARCH} element={<SearchPage />} />
+        </Routes>
     </ThemeProvider>
   );
 };

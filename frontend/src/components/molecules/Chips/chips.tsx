@@ -1,49 +1,36 @@
 import React from "react";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
+import { Chip, Stack, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import theme from "../../../theme/theme";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { optionsType } from "../../../Constants";
 import { greenState } from "../../../store/reducers";
-import { makeStyles } from "@material-ui/core/styles";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
-export type chipProps = {
+export type ChipProps = {
   label?: string;
   className?: string;
 };
 
-const useStyles = makeStyles({
-  root: {
-    fontSize: "15px",
-  },
-  " & .css-hk6fit-MuiButtonBase-root-MuiChip-root ": {
-    fontSize: "15px",
-    color: "red",
-  },
-});
-const chips: React.FC<chipProps> = ({ label, className }) => {
+const Chips: React.FC<ChipProps> = ({ label, className }) => {
+  const theme = useTheme();
   const dispatch = useDispatch();
-  const options: optionsType = useSelector<greenState, greenState["options"]>(
-    (state) => {
-      return state.options;
-    }
+
+  const options = useSelector<greenState, greenState["options"]>(
+    (state) => state.options
   );
 
-  const opsValue: boolean = useSelector<greenState, greenState["optionValue"]>(
-    (state) => {
-      return state.optionValue;
-    }
+  const opsValue = useSelector<greenState, greenState["optionValue"]>(
+    (state) => state.optionValue
   );
 
   const removeValue = (arr: string[], value: string) => {
-    let index = arr.indexOf(value);
+    const index = arr.indexOf(value);
     if (index > -1) {
       arr.splice(index, 1);
     }
   };
-  const DeleteHandler = (event: any) => {
+
+  const DeleteHandler = () => {
     removeValue(options.datePosted, label!);
     removeValue(options.distance, label!);
     removeValue(options.experienceLevel, label!);
@@ -53,29 +40,25 @@ const chips: React.FC<chipProps> = ({ label, className }) => {
     dispatch({ type: "SET_OPTIONS", payload: options });
     dispatch({ type: "SET_OPTIONS_VALUE", payload: !opsValue });
   };
-  const classes = useStyles();
 
   return (
     <Stack direction="row" spacing={1} className={className}>
       <Chip
         label={label}
-        style={{
-          backgroundColor: grey[50],
-          color: theme.palette.primary.main,
-          borderRadius: 10,
-          borderColor: theme.palette.primary.main,
-        }}
+        onDelete={DeleteHandler}
         variant="outlined"
         color="success"
-        onDelete={DeleteHandler}
-        deleteIcon={
-          <CloseOutlinedIcon
-            sx={{ fontSize: "10px" }}
-            className={classes.root}
-          />
-        }
+        sx={{
+          backgroundColor: grey[50],
+          color: theme.palette.primary.main,
+          borderRadius: 2,
+          borderColor: theme.palette.primary.main,
+          fontSize: "15px",
+        }}
+        deleteIcon={<CloseOutlinedIcon sx={{ fontSize: "14px" }} />}
       />
     </Stack>
   );
 };
-export default chips;
+
+export default Chips;

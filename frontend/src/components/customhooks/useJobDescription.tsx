@@ -34,6 +34,8 @@ const useJobDescription = () => {
       return state.sidebarIndex;
     }
   );
+
+
   const userId = "1";
   useEffect(() => {
     getSavedJobs(userId, (res: any) => {
@@ -74,7 +76,7 @@ const useJobDescription = () => {
       setapplyvalue(ALERT_MESSAGES.UNAPPLY);
     }
   };
-  const applyJob = () => {};
+  const applyJob = () => { };
 
   return {
     savedjobs,

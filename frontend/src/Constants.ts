@@ -1,5 +1,5 @@
 import { CabCardProps } from "./components/molecules/CabCard/CabCard";
-import { countProps } from "./components/molecules/Jobcount/Count";
+import { CountProps } from "./components/molecules/Jobcount/Count";
 import { SideBarItemProps } from "./components/molecules/SideBarItem/SideBarItem";
 import { StepProps } from "./components/molecules/Step/Step";
 
@@ -8,7 +8,7 @@ export const SAVE = "Save";
 export const UNSAVE = "Unsave";
 export const APPLY = "Apply";
 export const VIEWINMAPS = "View in google maps";
-export const GREENCOMMUTE = "Green Commute";
+export const GREENCOMMUTE = "SKILL SYNC";
 export const GREENCOMMUTEROUTES = "Green Commute Routes";
 export const JOBCITY = "HiTech City";
 
@@ -211,7 +211,7 @@ export const AqiData: AqiItems[] = [
   },
 ];
 
-export const jobCountData: countProps[] = [
+export const jobCountData: CountProps[] = [
   {
     city: "Hyderabad",
     number: "894",
@@ -258,6 +258,11 @@ export type jobDataProp = {
   isApplied?: boolean;
   description?: string;
   requiredProficiency?: string[];
+  jobPostingUrl?:string;
+  salary?:number;
+  sponsored?: boolean;  
+  percentageMatch?:number;
+
 };
 
 export type jobDataProp1 = {
@@ -289,7 +294,7 @@ export const LANDING_PAGE_MESSAGE = {
 
 export const PATHS = {
   LANDING_PAGE: "/landingpage",
-  ADVANCED_SEARCH: "/advancedsearch",
+  ADVANCED_SEARCH: "/findjobs",
   JOB_SEARCH: "/searchjob",
 };
 
@@ -338,7 +343,7 @@ export const ALERT_MESSAGES = {
   UNAPPLY: "Applied",
 };
 
-export const OPTIONS_HEADINGS = [
+export const OPTIONS_HEADINGS: (keyof optionsType)[] = [
   "distance",
   "datePosted",
   "jobType",

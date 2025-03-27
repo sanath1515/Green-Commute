@@ -1,14 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import theme from "../../../theme/theme";
+import { Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/material/styles"; 
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 export type SideBarItemProps = {
@@ -19,15 +17,27 @@ export type SideBarItemProps = {
   class1?: string;
 };
 
-const useStyles = makeStyles({
-  text: {
-    fontFamily: "Montserrat",
-    marginLeft: theme.spacing(4),
-  },
-  icon: {
-    marginLeft: theme.spacing(4),
-  },
-});
+// Styled components
+const Container = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  cursor: "pointer",
+}));
+
+const IconWrapper = styled("div")(({ theme }) => ({
+  marginLeft: theme.spacing(4),
+  display: "flex",
+  alignItems: "center",
+}));
+
+const Text = styled(Typography)(({ theme }) => ({
+  fontFamily: "Montserrat",
+  marginLeft: theme.spacing(4),
+}));
+
+const ImageIcon = styled("img")(({ theme }) => ({
+  marginLeft: theme.spacing(4),
+}));
 
 const SideBarItem: React.FC<SideBarItemProps> = ({
   id,
@@ -36,32 +46,27 @@ const SideBarItem: React.FC<SideBarItemProps> = ({
   handleClick,
   class1,
 }) => {
-  const classes = useStyles();
-  const icons = [
-    <DashboardOutlinedIcon className={classes.icon} />,
-    <WorkOutlineOutlinedIcon className={classes.icon} />,
-    <BookmarkBorderOutlinedIcon className={classes.icon} />,
-    <DescriptionOutlinedIcon className={classes.icon} />,
-    <DateRangeOutlinedIcon className={classes.icon} />,
-    <HelpOutlineOutlinedIcon className={classes.icon} />,
-    <SettingsOutlinedIcon className={classes.icon} />,
-    <SettingsOutlinedIcon className={classes.icon} />,
-  ];
   const clickHandler = () => {
-    handleClick!(id);
+    handleClick?.(id);
+  };
+
+  const icons: Record<string, JSX.Element> = {
+    "1": <DashboardOutlinedIcon />,
+    "2": <WorkOutlineOutlinedIcon />,
+    "3": <BookmarkBorderOutlinedIcon />,
+    "4": <DescriptionOutlinedIcon />,
+    "5": <DateRangeOutlinedIcon />,
+    "6": <HelpOutlineOutlinedIcon />,
+    "8": <SettingsOutlinedIcon />, // fallback
   };
 
   return (
-    <div className={class1} onClick={clickHandler}>
-      {id !== "7" ? (
-        icons[parseInt(id) - 1]
-      ) : (
-        <img src={img} className={classes.icon}></img>
-      )}
-      <Typography variant="subtitle1" className={classes.text}>
-        {name}
-      </Typography>
-    </div>
+    <Container className={class1} onClick={clickHandler}>
+      <IconWrapper>
+        {id !== "7" ? icons[id] || icons["8"] : <ImageIcon src={img} alt="sidebar-icon" />}
+      </IconWrapper>
+      <Text variant="subtitle1">{name}</Text>
+    </Container>
   );
 };
 

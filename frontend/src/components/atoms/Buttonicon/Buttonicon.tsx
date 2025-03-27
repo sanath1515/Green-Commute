@@ -1,25 +1,29 @@
 import React from "react";
-import { Button as MuiButton } from "@material-ui/core";
+import { Button as MuiButton } from "@mui/material";
 
 export type ButtonProps = {
-  children?: JSX.Element;
+  children?: React.ReactNode;
   variant?: "contained" | "text" | "outlined";
   color?: "primary" | "secondary" | "inherit";
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 };
 
-export const ButtonIcon = (props: ButtonProps) => {
+export const ButtonIcon = ({
+  children,
+  variant = "contained",
+  color = "primary",
+  onClick,
+  className,
+}: ButtonProps) => {
   return (
-    <>
-      <MuiButton
-        variant={props.variant}
-        onClick={props.onClick}
-        color={props.color}
-        className={props.className}
-      >
-        {props.children}
-      </MuiButton>
-    </>
+    <MuiButton
+      variant={variant}
+      onClick={onClick}
+      color={color}
+      className={className}
+    >
+      {children}
+    </MuiButton>
   );
 };

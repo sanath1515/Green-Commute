@@ -1,5 +1,5 @@
-import TextField from "@material-ui/core/TextField";
 import React from "react";
+import { TextField } from "@mui/material";
 
 export type TextFieldProps = {
   placeholder?: string;
@@ -16,7 +16,7 @@ const InputField: React.FC<TextFieldProps> = ({
   value,
   onChange,
   variant,
-  color,
+  color = "primary",
 }) => {
   return (
     <TextField
@@ -26,7 +26,9 @@ const InputField: React.FC<TextFieldProps> = ({
       size={size}
       placeholder={placeholder}
       onChange={onChange}
+      fullWidth
     />
   );
 };
+
 export default InputField;

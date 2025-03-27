@@ -1,45 +1,31 @@
-/* eslint-disable no-unused-vars */
-import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import PropTypes from "prop-types";
-export type countProps = {
+import { Typography } from "@mui/material";
+import { styled } from "@mui/material/styles"; 
+
+
+export type CountProps = {
   number?: string;
   city?: string;
 };
-const useStyles = makeStyles((theme) => ({
-  text: {
-    textAlign: "center",
-    fontSize: "100px",
-    fontWeight: 300,
-  },
-  text1: {
-    textAlign: "center",
-  },
-}));
-export const Count: React.FC<countProps> = (props) => {
-  const classes = useStyles();
-  const { number, city, ...rest } = props;
 
+// Styled components
+const NumberText = styled(Typography)({
+  textAlign: "center",
+  fontSize: "100px",
+  fontWeight: 300,
+});
+
+const CityText = styled(Typography)({
+  textAlign: "center",
+});
+
+export const Count: React.FC<CountProps> = ({ number, city = "" }) => {
   return (
     <>
-      <Typography variant="h2" className={classes.text}>
-        {number}
-      </Typography>
-
-      <Typography variant="h3" {...rest} className={classes.text1}>
-        {city}
-      </Typography>
+      <NumberText variant="h2">{number}</NumberText>
+      <CityText variant="h3">{city}</CityText>
     </>
   );
-};
-
-Count.propTypes = {
-  number: PropTypes.string.isRequired,
-  city: PropTypes.string,
-};
-
-Count.defaultProps = {
-  city: "",
 };
 
 export default Count;
